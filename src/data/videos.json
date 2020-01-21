@@ -1,0 +1,76 @@
+{
+    "mobilidade": [
+        {
+            "nome": "Gato/Camelo",
+            "url_video": "https://www.youtube.com/watch?v=7ea9a286CxU"
+        },
+        {
+            "nome": "Mobilidade de Ombro",
+            "url_video": "https://www.youtube.com/watch?v=oZ7vAzBN4YI"
+        },
+        {
+            "nome": "Mobilidade de Quadril",
+            "url_video": "https://www.youtube.com/watch?v=fPNnI6fdTmQ"
+        },
+        {
+            "nome": "Mobilidade de Tornozelo",
+            "url_video": "https://www.youtube.com/watch?v=2c1Jv3QwOCc"
+        },
+        {
+            "nome": "Superman Dinâmico",
+            "url_video": "https://www.youtube.com/watch?v=KLh90nAwgJE"
+        }
+    ],
+    "inferiores": [
+        {
+            "nome": "Abdução concha Miniband",
+            "url_video": "https://www.youtube.com/watch?v=YxyVgm4bpmc"
+        },
+        {
+            "nome": "Afundo Búlgaro",
+            "url_video": "https://www.youtube.com/watch?v=eMQGnRyPnu0"
+        },
+        {
+            "nome": "Cadeira Adutora",
+            "url_video": "https://www.youtube.com/watch?v=qe750SFMNUc"
+        },
+        {
+            "nome": "Mesa Flexora",
+            "url_video": "https://www.youtube.com/watch?v=ZPvzZvkgFw0"
+        },
+        {
+            "nome": "Leg Press 45",
+            "url_video": "https://www.youtube.com/watch?v=6s9Q9XDT6to"
+        },
+        {
+            "nome": "Stiff",
+            "url_video": "https://www.youtube.com/watch?v=d_XC4svqzU0"
+        }
+    ],
+    "superiores": [
+        {
+            "nome": "Cross Over",
+            "url_video": "https://www.youtube.com/watch?v=cHvKH5T0I_A"
+        },
+        {
+            "nome": "Rosca Alternada com Alter",
+            "url_video": "https://www.youtube.com/watch?v=G6feTR1uIG4"
+        },
+        {
+            "nome": "Barra Fixa",
+            "url_video": "https://www.youtube.com/watch?v=AU2_HMAby50"
+        },
+        {
+            "nome": "Remada Alta Barra",
+            "url_video": "https://www.youtube.com/watch?v=x0jHyTOsbow"
+        },
+        {
+            "nome": "Tríceps Corda",
+            "url_video": "https://www.youtube.com/watch?v=L1vs6BrYnGI"
+        },
+        {
+            "nome": "Abdominal Rodinha",
+            "url_video": "https://www.youtube.com/watch?v=yxKJrB8o-2Y"
+        }
+    ]
+}
