@@ -1,0 +1,18 @@
+{
+    "Bi-set": {
+        "nome": "Bi-set",
+        "descricao_metodo": "Descrição do método Bi-set"
+    },
+    "Hiit": {
+        "nome": "Hiit",
+        "descricao_metodo": "Descrição do método Hiit"
+    },
+    "Máximas": {
+        "nome": "Máximas",
+        "descricao_metodo": "Descrição do método Máximas"
+    },
+    "Drop-set": {        
+        "nome": "Drop-set",
+        "descricao_metodo": "Descrição do método Drop-set"
+    }
+}

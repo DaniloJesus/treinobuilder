@@ -17,7 +17,8 @@
 
 <body>
   <?php include('includes/menu.html');
-  $contents = json_decode(file_get_contents("src/data/videos.json"));
+  $contents_exercicio = json_decode(file_get_contents("src/data/videos.json"));
+  $contents_metodo = json_decode(file_get_contents("src/data/metodos.json"));
   ?>
   <div class="container mt-3">
     <form>
@@ -29,7 +30,7 @@
         <div class="form-group col-6">
           <label for="exercicio">Escolha o exercício:</label>
           <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true" id="exercicio">
-            <?php foreach ($contents as $tipo => $exercicio) : ?>
+            <?php foreach ($contents_exercicio as $tipo => $exercicio) : ?>
               <optgroup label="<?php echo ucwords($tipo); ?>">
                 <?php foreach ($exercicio as $data) : ?>
                   <option value="<?php echo $data->nome; ?>" data-url-video="<?php echo $data->url_video; ?>" data-tokens="<?php echo $data->nome; ?>"><?php echo $data->nome; ?></option>
@@ -43,23 +44,27 @@
           <input id="series" class="form-control" type="text" placeholder="2x, 3x..." value="4x">
         </div> -->
         <div class="form-group col">
-          <label for="metodo">Método: <small><u>(pegar via JSON)</u></small></label>
-          <input id="metodo" class="form-control" type="text" placeholder="Bi-set, Máximas..."  value="Bi-set">
+          <label for="metodo">Método:</label>
+          <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true" id="metodo">
+            <?php foreach ($contents_metodo as $dataMetodo) : ?>
+              <option value="<?php echo $dataMetodo->nome; ?>" data-descricao-metodo="<?php echo $data->descricao_metodo; ?>" data-tokens="<?php echo $dataMetodo->nome; ?>"><?php echo $dataMetodo->nome; ?></option>
+            <?php endforeach; ?>
+          </select>
         </div>
       </div>
 
       <div class="row">
         <div class="form-group col">
           <label for="repeticoes">Repetições:</label>
-          <input id="repeticoes" class="form-control" type="text" placeholder="1x15 + 3x 7 a 10"  value="1x15 + 3x 7 a 10">
+          <input id="repeticoes" class="form-control" type="text" placeholder="1x15 + 3x 7 a 10" value="1x15 + 3x 7 a 10">
         </div>
         <div class="form-group col">
           <label for="cadencia">Cadência:</label>
-          <input id="cadencia" class="form-control" type="text" placeholder="2020, 3030..."  value="4040">
+          <input id="cadencia" class="form-control" type="text" placeholder="2020, 3030..." value="4040">
         </div>
         <div class="form-group col-6">
           <label for="descanso">Tempo de descanso:</label>
-          <input id="descanso" class="form-control" type="text" placeholder="45 segundos, 60 segundos..."  value="60 segundos">
+          <input id="descanso" class="form-control" type="text" placeholder="45 segundos, 60 segundos..." value="60 segundos">
         </div>
       </div>
       <div class="row justify-content-between">
@@ -110,13 +115,13 @@
 
         </table>
       </div>
+      <div id="descricaoMetodo"></div>
     </form>
   </div>
 </body>
 
 </html>
 <!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstraps JS -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
@@ -128,34 +133,48 @@
     element.closest('tr').remove();
   }
 
+  function adicionaDescricaoMetodo(nomeMetodo) {
+    jQuery.getJSON("src/data/metodos.json", function(json) {
+      descricaoMetodoAtual = jQuery('#descricaoMetodo').html();
+      descricaoIncluir = json[nomeMetodo].descricao_metodo;
+      if (descricaoMetodoAtual.indexOf(descricaoIncluir) === -1) {
+        jQuery('#descricaoMetodo').html(descricaoMetodoAtual + "<b>" + nomeMetodo + ": </b>" + descricaoIncluir + "<br/>");
+      }
+    });
+  }
+
   jQuery(function() {
+    // Limpar Treino
+    jQuery('#limparTreino').click(function() {
+      jQuery('#tabelaTreino tbody').empty();
+      jQuery('#descricaoMetodo').empty();
+    });
+
     // Adicionar exercicio ao Treino
     jQuery('#adicionarExercicio').click(function() {
-      row = '<tr>'+
-              '<td class="middle colExercicio"><a href="##url-video##" target="_blank">##exercicio##</a></td>' +
-              //'<td class="middle colSeries" >##series##</td>' +
-              '<td class="middle colMetodo" >##metodo##</td>' +
-              '<td class="middle colRepeticoes" >##repeticoes##</td>' +
-              '<td class="middle colCadencia" >##cadencia##</td>' +
-              '<td class="middle colDescanso" >##descanso##</td>' +
-              '<td class="text-right colBotaoRemover"><button class="btn" onclick="deleteExercicio(jQuery(this))"><i class="fa fa-trash fa-sm"></i></button></td>'+
-            '</tr>';
-      
+      nomeMetodo = jQuery('select#metodo option:selected').val();
+      row = '<tr>' +
+        '<td class="middle colExercicio"><a href="##url-video##" target="_blank">##exercicio##</a></td>' +
+        //'<td class="middle colSeries" >##series##</td>' +
+        '<td class="middle colMetodo" >##metodo##</td>' +
+        '<td class="middle colRepeticoes" >##repeticoes##</td>' +
+        '<td class="middle colCadencia" >##cadencia##</td>' +
+        '<td class="middle colDescanso" >##descanso##</td>' +
+        '<td class="text-right colBotaoRemover"><button class="btn" onclick="deleteExercicio(jQuery(this))"><i class="fa fa-trash fa-sm"></i></button></td>' +
+        '</tr>';
+
       // replaces
       row = row.replace('##url-video##', jQuery('select#exercicio option:selected').data('url-video'));
       row = row.replace('##exercicio##', jQuery('#exercicio').val());
-      row = row.replace('##series##', jQuery('#series').val());
-      row = row.replace('##metodo##', jQuery('#metodo').val());
+      // row = row.replace('##series##', jQuery('#series').val());
+      row = row.replace('##metodo##', nomeMetodo);
       row = row.replace('##repeticoes##', jQuery('#repeticoes').val());
       row = row.replace('##cadencia##', jQuery('#cadencia').val());
       row = row.replace('##descanso##', jQuery('#descanso').val());
 
       jQuery('#tabelaTreino > tbody:last-child').append(row);
+      adicionaDescricaoMetodo(nomeMetodo);
     });
 
-    // Limpar Treino
-    jQuery('#limparTreino').click(function() {
-      jQuery('#tabelaTreino tbody').empty();
-    });
   });
 </script>
