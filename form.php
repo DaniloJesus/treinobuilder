@@ -9,6 +9,8 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.12/css/bootstrap-select.min.css" integrity="sha384-BJPGVhka8+B49CO2MFRKLZ0fD0v142Ssd+px+a64YvT+EoCupeZSxIxPvxafQ4cJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="src/style/form.css">
 
   <title>Felipe de Paulo - Treino Builder</title>
 </head>
@@ -30,34 +32,34 @@
             <?php foreach ($contents as $tipo => $exercicio) : ?>
               <optgroup label="<?php echo ucwords($tipo); ?>">
                 <?php foreach ($exercicio as $data) : ?>
-                  <option id="<?php echo $data->nome; ?>" value="<?php echo $data->nome; ?>" data-tokens="<?php echo $data->nome; ?>"><?php echo $data->nome; ?></option>
+                  <option value="<?php echo $data->nome; ?>" data-url-video="<?php echo $data->url_video; ?>" data-tokens="<?php echo $data->nome; ?>"><?php echo $data->nome; ?></option>
                 <?php endforeach; ?>
               </optgroup>
             <?php endforeach; ?>
           </select>
         </div>
-        <div class="form-group col">
+        <!-- <div class="form-group col">
           <label for="series">Quantidade de séries:</label>
-          <input id="series" class="form-control" type="text" placeholder="2x, 3x...">
-        </div>
+          <input id="series" class="form-control" type="text" placeholder="2x, 3x..." value="4x">
+        </div> -->
         <div class="form-group col">
           <label for="metodo">Método: <small><u>(pegar via JSON)</u></small></label>
-          <input id="metodo" class="form-control" type="text" placeholder="Bi-set, Máximas...">
+          <input id="metodo" class="form-control" type="text" placeholder="Bi-set, Máximas..."  value="Bi-set">
         </div>
       </div>
 
       <div class="row">
         <div class="form-group col">
           <label for="repeticoes">Repetições:</label>
-          <input id="repeticoes" class="form-control" type="text" placeholder="9 a 11, 12 a 15...">
+          <input id="repeticoes" class="form-control" type="text" placeholder="1x15 + 3x 7 a 10"  value="1x15 + 3x 7 a 10">
         </div>
         <div class="form-group col">
           <label for="cadencia">Cadência:</label>
-          <input id="cadencia" class="form-control" type="text" placeholder="2020, 3030...">
+          <input id="cadencia" class="form-control" type="text" placeholder="2020, 3030..."  value="4040">
         </div>
         <div class="form-group col-6">
           <label for="descanso">Tempo de descanso:</label>
-          <input id="descanso" class="form-control" type="text" placeholder="45 segundos, 60 segundos...">
+          <input id="descanso" class="form-control" type="text" placeholder="45 segundos, 60 segundos..."  value="60 segundos">
         </div>
       </div>
       <div class="row justify-content-between">
@@ -90,15 +92,19 @@
         </div>
       </div>
       <!-- Modal -->
+
       <div>
-        <table id="tabelaTreino" class="table table-striped table-dark mt-4">
-          <thead>
-            <td>Exercício</td>
-            <td>Séries</td>
-            <td>Método</td>
-            <td>Repetições</td>
-            <td>Cadência</td>
-            <td>Descanso</td>
+        <table id="tabelaTreino" class="table table-sm table-hover table-striped table-light mt-4">
+          <thead class="thead-dark">
+            <tr>
+              <th class="colExercicio">Exercício</th>
+              <!-- <th class="colSeries">Séries</th> -->
+              <th class="colMetodo">Método</th>
+              <th class="colRepeticoes">Repetições</th>
+              <th class="colCadencia">Cadência</th>
+              <th class="colDescanso">Descanso</th>
+              <th class="colBotaoRemover"></th>
+            </tr>
           </thead>
           <tbody></tbody>
 
@@ -125,7 +131,18 @@
   jQuery(function() {
     // Adicionar exercicio ao Treino
     jQuery('#adicionarExercicio').click(function() {
-      row = '<tr onclick="deleteExercicio(jQuery(this))"><td>##exercicio##</td><td>##series##</td><td>##metodo##</td><td>##repeticoes##</td><td>##cadencia##</td><td>##descanso##</td></tr>'
+      row = '<tr>'+
+              '<td class="middle colExercicio"><a href="##url-video##" target="_blank">##exercicio##</a></td>' +
+              //'<td class="middle colSeries" >##series##</td>' +
+              '<td class="middle colMetodo" >##metodo##</td>' +
+              '<td class="middle colRepeticoes" >##repeticoes##</td>' +
+              '<td class="middle colCadencia" >##cadencia##</td>' +
+              '<td class="middle colDescanso" >##descanso##</td>' +
+              '<td class="text-right colBotaoRemover"><button class="btn" onclick="deleteExercicio(jQuery(this))"><i class="fa fa-trash fa-sm"></i></button></td>'+
+            '</tr>';
+      
+      // replaces
+      row = row.replace('##url-video##', jQuery('select#exercicio option:selected').data('url-video'));
       row = row.replace('##exercicio##', jQuery('#exercicio').val());
       row = row.replace('##series##', jQuery('#series').val());
       row = row.replace('##metodo##', jQuery('#metodo').val());
