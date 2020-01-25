@@ -1,18 +1,27 @@
 {
     "Bi-set": {
         "nome": "Bi-set",
-        "descricao_metodo": "Descrição do método Bi-set"
+        "descricao_metodo": "Descrição do método Bi-set",
+        "qtd_exercicios": "2"
+    },
+    "Tri-set": {
+        "nome": "Tri-set",
+        "descricao_metodo": "Descrição do método Tri-set",
+        "qtd_exercicios": "3"
     },
     "Hiit": {
         "nome": "Hiit",
-        "descricao_metodo": "Descrição do método Hiit"
+        "descricao_metodo": "Descrição do método Hiit",
+        "qtd_exercicios": "1"
     },
     "Máximas": {
         "nome": "Máximas",
-        "descricao_metodo": "Descrição do método Máximas"
+        "descricao_metodo": "Descrição do método Máximas",
+        "qtd_exercicios": "1"
     },
     "Drop-set": {        
         "nome": "Drop-set",
-        "descricao_metodo": "Descrição do método Drop-set"
+        "descricao_metodo": "Descrição do método Drop-set",
+        "qtd_exercicios": "1"
     }
 }

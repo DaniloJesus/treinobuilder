@@ -1,5 +1,5 @@
 {
-    "mobilidade": [
+    "Mobilidade": [
         {
             "nome": "Gato/Camelo",
             "url_video": "https://www.youtube.com/watch?v=7ea9a286CxU"
@@ -21,7 +21,7 @@
             "url_video": "https://www.youtube.com/watch?v=KLh90nAwgJE"
         }
     ],
-    "inferiores": [
+    "Inferiores": [
         {
             "nome": "Abdução concha Miniband",
             "url_video": "https://www.youtube.com/watch?v=YxyVgm4bpmc"
@@ -47,7 +47,7 @@
             "url_video": "https://www.youtube.com/watch?v=d_XC4svqzU0"
         }
     ],
-    "superiores": [
+    "Superiores": [
         {
             "nome": "Cross Over",
             "url_video": "https://www.youtube.com/watch?v=cHvKH5T0I_A"

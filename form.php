@@ -22,14 +22,28 @@
   ?>
   <div class="container mt-3">
     <form>
-      <div class="form-group">
-        <label for="titulo">Título do Treino:</label>
-        <input id="titulo" class="form-control" type="text" placeholder="Treino A (Segunda e Quinta)">
-      </div>
       <div class="row">
-        <div class="form-group col-6">
-          <label for="exercicio">Escolha o exercício:</label>
-          <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true" id="exercicio">
+        <div class="form-group col">
+          <label for="titulo">Título do Treino:</label>
+          <input id="titulo" class="form-control" type="text" placeholder="Treino A (Segunda e Quinta)">
+        </div>
+        <div class="form-group col">
+          <label for="metodo">Método:</label>
+          <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true" id="metodo">
+            <?php foreach ($contents_metodo as $dataMetodo) : ?>
+              <option value="<?php echo $dataMetodo->nome; ?>" data-qtd-exercicios="<?php echo $dataMetodo->qtd_exercicios; ?>" data-tokens="<?php echo $dataMetodo->nome; ?>"><?php echo $dataMetodo->nome; ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <!-- <div class="form-group col">
+          <label for="series">Quantidade de séries:</label>
+          <input id="series" class="form-control" type="text" placeholder="2x, 3x..." value="4x">
+        </div> -->
+      </div>
+      <div class="form-group" id="containerExercicios">
+        <div id="selectExercicio1">
+          <label for="exercicio1">Escolha o exercício 01:</label>        
+          <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true" id="exercicio1">
             <?php foreach ($contents_exercicio as $tipo => $exercicio) : ?>
               <optgroup label="<?php echo ucwords($tipo); ?>">
                 <?php foreach ($exercicio as $data) : ?>
@@ -39,18 +53,33 @@
             <?php endforeach; ?>
           </select>
         </div>
-        <!-- <div class="form-group col">
-          <label for="series">Quantidade de séries:</label>
-          <input id="series" class="form-control" type="text" placeholder="2x, 3x..." value="4x">
-        </div> -->
-        <div class="form-group col">
-          <label for="metodo">Método:</label>
-          <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true" id="metodo">
-            <?php foreach ($contents_metodo as $dataMetodo) : ?>
-              <option value="<?php echo $dataMetodo->nome; ?>" data-descricao-metodo="<?php echo $data->descricao_metodo; ?>" data-tokens="<?php echo $dataMetodo->nome; ?>"><?php echo $dataMetodo->nome; ?></option>
+
+        <div id="selectExercicio2" class="mt-2">
+          <label for="exercicio1">Escolha o exercício 02:</label>        
+          <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true" id="exercicio2">
+            <?php foreach ($contents_exercicio as $tipo => $exercicio) : ?>
+              <optgroup label="<?php echo ucwords($tipo); ?>">
+                <?php foreach ($exercicio as $data) : ?>
+                  <option value="<?php echo $data->nome; ?>" data-url-video="<?php echo $data->url_video; ?>" data-tokens="<?php echo $data->nome; ?>"><?php echo $data->nome; ?></option>
+                <?php endforeach; ?>
+              </optgroup>
             <?php endforeach; ?>
           </select>
         </div>
+        
+        <div id="selectExercicio3"  class="mt-2">
+          <label for="exercicio3">Escolha o exercício 03:</label>        
+          <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true" id="exercicio3">
+            <?php foreach ($contents_exercicio as $tipo => $exercicio) : ?>
+              <optgroup label="<?php echo ucwords($tipo); ?>">
+                <?php foreach ($exercicio as $data) : ?>
+                  <option value="<?php echo $data->nome; ?>" data-url-video="<?php echo $data->url_video; ?>" data-tokens="<?php echo $data->nome; ?>"><?php echo $data->nome; ?></option>
+                <?php endforeach; ?>
+              </optgroup>
+            <?php endforeach; ?>
+          </select>
+        </div>
+
       </div>
 
       <div class="row">
@@ -98,7 +127,7 @@
       </div>
       <!-- Modal -->
 
-      <div>
+      <div id="tabelaTrienoContainer">
         <table id="tabelaTreino" class="table table-sm table-hover table-striped table-light mt-4">
           <thead class="thead-dark">
             <tr>
@@ -153,8 +182,41 @@
     // Adicionar exercicio ao Treino
     jQuery('#adicionarExercicio').click(function() {
       nomeMetodo = jQuery('select#metodo option:selected').val();
+
+      // url_exercicio1 = jQuery('select#exercicio1 option:selected').data('url-video');
+      // url_exercicio2 = jQuery('select#exercicio2 option:selected').data('url-video');
+      // url_exercicio3 = jQuery('select#exercicio3 option:selected').data('url-video');
+      // exercicio1 = jQuery('#exercicio1').val();
+      // exercicio2 = jQuery('#exercicio2').val();
+      // exercicio3 = jQuery('#exercicio3').val();
+      // stringExercicio1 = '<a href="' + url_exercicio1 + '" target="_blank">' + exercicio1 + '</a>';
+      // stringExercicio2 = '<a href="' + url_exercicio2 + '" target="_blank">' + exercicio2 + '</a>';
+      // stringExercicio3 = '<a href="' + url_exercicio3 + '" target="_blank">' + exercicio3 + '</a>';
+
+      total = jQuery('#metodo').find(":selected").data('qtd-exercicios');
+      stringExercicio = "";
+      for(i=1; i<=total; i++){
+        if(i > 1){
+          stringExercicio += ' + ';
+        }
+        stringExercicio += '<a href="' + jQuery('select#exercicio' + i + ' option:selected').data('url-video') + '" target="_blank">' + jQuery('#exercicio'+i).val() + '</a>';
+      }
+      // stringExercicio = stringExercicio1;
+
+      // switch (total){
+      //   case 2: {
+      //     stringExercicio += ' + ' + stringExercicio2;
+      //     break;
+      //   }
+      //   case 3:{
+      //     stringExercicio += ' + ' + stringExercicio2 + ' + ' + stringExercicio3;
+      //     break;
+      //   }
+      // }
+
       row = '<tr>' +
-        '<td class="middle colExercicio"><a href="##url-video##" target="_blank">##exercicio##</a></td>' +
+        '<td class="middle colExercicio">##stringExercicio##</td>' +
+        // '<td class="middle colExercicio"><a href="##url-video##" target="_blank">##exercicio##</a></td>' +
         //'<td class="middle colSeries" >##series##</td>' +
         '<td class="middle colMetodo" >##metodo##</td>' +
         '<td class="middle colRepeticoes" >##repeticoes##</td>' +
@@ -164,8 +226,8 @@
         '</tr>';
 
       // replaces
-      row = row.replace('##url-video##', jQuery('select#exercicio option:selected').data('url-video'));
-      row = row.replace('##exercicio##', jQuery('#exercicio').val());
+      // row = row.replace('##url-video##', jQuery('select#exercicio1 option:selected').data('url-video'));
+      row = row.replace('##stringExercicio##', stringExercicio);
       // row = row.replace('##series##', jQuery('#series').val());
       row = row.replace('##metodo##', nomeMetodo);
       row = row.replace('##repeticoes##', jQuery('#repeticoes').val());
@@ -174,6 +236,30 @@
 
       jQuery('#tabelaTreino > tbody:last-child').append(row);
       adicionaDescricaoMetodo(nomeMetodo);
+    });
+
+    // Exibição de exercicios condicionados ao método escolhido
+    jQuery('#metodo').on('change', function() {
+      // var opcao = jQuery(this).find(":selected").val();
+      var total = jQuery(this).find(":selected").data('qtd-exercicios');
+      jQuery('#selectExercicio2').hide();
+      jQuery('#selectExercicio3').hide();
+      switch(total){
+        case 2: {
+          jQuery('#selectExercicio2').show(); 
+          break;
+        }
+        case 3: {
+          jQuery('#selectExercicio2').show(); 
+          jQuery('#selectExercicio3').show();
+          break;
+        }
+        default:{
+          jQuery('#selectExercicio2').hide();
+          jQuery('#selectExercicio3').hide();
+          break;
+        }
+      }
     });
 
   });
