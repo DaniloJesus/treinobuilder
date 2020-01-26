@@ -127,8 +127,9 @@
       </div>
       <!-- Modal -->
 
-      <div id="tabelaTrienoContainer">
-        <table id="tabelaTreino" class="table table-sm table-hover table-striped table-light mt-4">
+      <div id="tabelaTrienoContainer" class="mt-4">      
+        <table id="tabelaTreino" class="table table-sm table-hover table-striped table-light mt-1">
+          <h5 class="text-center" id="tituloTreino"></h5>
           <thead class="thead-dark">
             <tr>
               <th class="colExercicio">Exercício</th>
@@ -175,6 +176,7 @@
 
   jQuery(function() {
     jQuery('tbody').sortable();
+
     // Limpar Treino
     jQuery('#limparTreino').click(function() {
       jQuery('#tabelaTreino tbody').empty();
@@ -183,6 +185,7 @@
 
     // Adicionar exercicio ao Treino
     jQuery('#adicionarExercicio').click(function() {
+      jQuery('#tituloTreino').html(jQuery('#titulo').val());
       nomeMetodo = jQuery('select#metodo option:selected').val();
 
       // url_exercicio1 = jQuery('select#exercicio1 option:selected').data('url-video');
