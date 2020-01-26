@@ -114,13 +114,13 @@
             </div>
             <div class="modal-body">
               <div class="form-group">
-                <label for="labelComplementoTreino" class="col-form-label">Complemento do Treino:</label>
-                <textarea class="form-control" id="labelComplementoTreino"></textarea>
+                <label for="txtComplementoTreino" class="col-form-label">Complemento do Treino:</label>
+                <textarea class="form-control" id="txtComplementoTreino"></textarea>
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-              <button type="button" class="btn btn-primary">Submit Btn</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalBotaoFechar">Fechar</button>
+              <button type="button" class="btn btn-primary" id="modalConcluirTreino">Concluir Treino</button>
             </div>
           </div>
         </div>
@@ -142,9 +142,9 @@
             </tr>
           </thead>
           <tbody></tbody>
-
         </table>
       </div>
+      <div id="comentarioTreino"></div>
       <div id="descricaoMetodo"></div>
     </form>
   </div>
@@ -267,5 +267,9 @@
       }
     });
 
+    jQuery('#modalConcluirTreino').click(function() {
+      jQuery('#comentarioTreino').html(jQuery('#txtComplementoTreino').val());
+      jQuery('#modalBotaoFechar').trigger('click');
+  });
   });
 </script>
