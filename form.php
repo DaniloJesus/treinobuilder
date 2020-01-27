@@ -29,7 +29,8 @@
         </div>
         <div class="form-group col">
           <label for="metodo">Método:</label>
-          <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true" id="metodo">
+          <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true" id="metodo" required>
+            <option value="" selected disabled style="display: none;">Selecione um método</option>
             <?php foreach ($contents_metodo as $dataMetodo) : ?>
               <option value="<?php echo $dataMetodo->nome; ?>" data-qtd-exercicios="<?php echo $dataMetodo->qtd_exercicios; ?>" data-tokens="<?php echo $dataMetodo->nome; ?>"><?php echo $dataMetodo->nome; ?></option>
             <?php endforeach; ?>
@@ -42,7 +43,7 @@
       </div>
       <div class="form-group" id="containerExercicios">
         <div id="selectExercicio1">
-          <label for="exercicio1">Escolha o exercício 01:</label>        
+          <label for="exercicio1">Escolha o exercício 01:</label>
           <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true" id="exercicio1">
             <?php foreach ($contents_exercicio as $tipo => $exercicio) : ?>
               <optgroup label="<?php echo ucwords($tipo); ?>">
@@ -55,7 +56,7 @@
         </div>
 
         <div id="selectExercicio2" class="mt-2">
-          <label for="exercicio1">Escolha o exercício 02:</label>        
+          <label for="exercicio1">Escolha o exercício 02:</label>
           <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true" id="exercicio2">
             <?php foreach ($contents_exercicio as $tipo => $exercicio) : ?>
               <optgroup label="<?php echo ucwords($tipo); ?>">
@@ -66,9 +67,9 @@
             <?php endforeach; ?>
           </select>
         </div>
-        
-        <div id="selectExercicio3"  class="mt-2">
-          <label for="exercicio3">Escolha o exercício 03:</label>        
+
+        <div id="selectExercicio3" class="mt-2">
+          <label for="exercicio3">Escolha o exercício 03:</label>
           <select class="form-control selectpicker" data-show-subtext="true" data-live-search="true" id="exercicio3">
             <?php foreach ($contents_exercicio as $tipo => $exercicio) : ?>
               <optgroup label="<?php echo ucwords($tipo); ?>">
@@ -127,16 +128,16 @@
       </div>
       <!-- Modal -->
 
-      <div id="tabelaTrienoContainer" class="mt-4">      
+      <div id="tabelaTrienoContainer" class="mt-4">
         <table id="tabelaTreino" class="table table-sm table-hover table-striped table-light mt-1">
           <h5 class="text-center" id="tituloTreino"></h5>
           <thead class="thead-dark">
             <tr>
-              <th class="colExercicio">Exercício</th>
+              <th class="colExercicio" width="35%">Exercício</th>
               <!-- <th class="colSeries">Séries</th> -->
-              <th class="colMetodo">Método</th>
-              <th class="colRepeticoes">Repetições</th>
-              <th class="colCadencia">Cadência</th>
+              <th class="colMetodo" width="10%">Método</th>
+              <th class="colRepeticoes" width="20%">Repetições</th>
+              <th class="colCadencia" width="12%">Cadência</th>
               <th class="colDescanso">Descanso</th>
               <th class="colBotaoRemover"></th>
             </tr>
@@ -145,7 +146,12 @@
         </table>
       </div>
       <div id="comentarioTreino"></div>
-      <div id="descricaoMetodo"></div>
+      <div id="rodapeTreino">
+        <div id="descricaoMetodo" class="mt-2"></div>
+        <div id="botoesFinalizaTreino" class="mt-4">
+          <button type="button" class="btn btn-primary" id="btnFinalizaTreino" disabled>Finalizar Treino</button>
+        </div>
+      </div>
     </form>
   </div>
 </body>
@@ -157,6 +163,9 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.12/js/bootstrap-select.min.js" integrity="sha384-ykzduUaBYjweaCG/roIizm54PztxJiXT7XLC6dkluArvYbvp74xjRWxyzmg7u5/4" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha384-C/LoS0Y+QiLvc/pkrxB48hGurivhosqjvaTeRH7YLTf2a6Ecg7yMdQqTD3bdFmMO" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/jspdf-autotable@3.2.11/dist/jspdf.plugin.autotable.js" integrity="sha384-cUiRXD07a38Fh7In5F/mVODXKG9epiTB7BjwpJVni5uTFTEKg0CqaoPuJpXWSD2Q" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.1/html2pdf.bundle.min.js" integrity="sha384-Ho2Qx5q7Y92BZSxEZtDh2+hUqcudf/uXp77PK0XXawmB+tmreY4nUttlKWXnUWtn" crossorigin="anonymous"></script>
 
 <script>
   // Remover Exercicio da Tabela
@@ -181,48 +190,32 @@
     jQuery('#limparTreino').click(function() {
       jQuery('#tabelaTreino tbody').empty();
       jQuery('#descricaoMetodo').empty();
+      jQuery("#btnFinalizaTreino").attr("disabled", true);
+      // jQuery("select#metodo option").prop("disabled", false);
+      jQuery("#metodo").val("").change();
+      jQuery("select#metodo option").prop("disabled", true);
     });
 
     // Adicionar exercicio ao Treino
     jQuery('#adicionarExercicio').click(function() {
       jQuery('#tituloTreino').html(jQuery('#titulo').val());
       nomeMetodo = jQuery('select#metodo option:selected').val();
-
-      // url_exercicio1 = jQuery('select#exercicio1 option:selected').data('url-video');
-      // url_exercicio2 = jQuery('select#exercicio2 option:selected').data('url-video');
-      // url_exercicio3 = jQuery('select#exercicio3 option:selected').data('url-video');
-      // exercicio1 = jQuery('#exercicio1').val();
-      // exercicio2 = jQuery('#exercicio2').val();
-      // exercicio3 = jQuery('#exercicio3').val();
-      // stringExercicio1 = '<a href="' + url_exercicio1 + '" target="_blank">' + exercicio1 + '</a>';
-      // stringExercicio2 = '<a href="' + url_exercicio2 + '" target="_blank">' + exercicio2 + '</a>';
-      // stringExercicio3 = '<a href="' + url_exercicio3 + '" target="_blank">' + exercicio3 + '</a>';
+      if (nomeMetodo == "") {
+        alert('Por favor, escolha um método antes de escolher o exercício');
+        return false;
+      }
 
       total = jQuery('#metodo').find(":selected").data('qtd-exercicios');
       stringExercicio = "";
-      for(i=1; i<=total; i++){
-        if(i > 1){
+      for (i = 1; i <= total; i++) {
+        if (i > 1) {
           stringExercicio += ' + ';
         }
-        stringExercicio += '<a href="' + jQuery('select#exercicio' + i + ' option:selected').data('url-video') + '" target="_blank">' + jQuery('#exercicio'+i).val() + '</a>';
+        stringExercicio += '<a href="' + jQuery('select#exercicio' + i + ' option:selected').data('url-video') + '" target="_blank">' + jQuery('#exercicio' + i).val() + '</a>';
       }
-      // stringExercicio = stringExercicio1;
-
-      // switch (total){
-      //   case 2: {
-      //     stringExercicio += ' + ' + stringExercicio2;
-      //     break;
-      //   }
-      //   case 3:{
-      //     stringExercicio += ' + ' + stringExercicio2 + ' + ' + stringExercicio3;
-      //     break;
-      //   }
-      // }
 
       row = '<tr>' +
         '<td class="middle colExercicio">##stringExercicio##</td>' +
-        // '<td class="middle colExercicio"><a href="##url-video##" target="_blank">##exercicio##</a></td>' +
-        //'<td class="middle colSeries" >##series##</td>' +
         '<td class="middle colMetodo" >##metodo##</td>' +
         '<td class="middle colRepeticoes" >##repeticoes##</td>' +
         '<td class="middle colCadencia" >##cadencia##</td>' +
@@ -231,9 +224,7 @@
         '</tr>';
 
       // replaces
-      // row = row.replace('##url-video##', jQuery('select#exercicio1 option:selected').data('url-video'));
       row = row.replace('##stringExercicio##', stringExercicio);
-      // row = row.replace('##series##', jQuery('#series').val());
       row = row.replace('##metodo##', nomeMetodo);
       row = row.replace('##repeticoes##', jQuery('#repeticoes').val());
       row = row.replace('##cadencia##', jQuery('#cadencia').val());
@@ -241,6 +232,9 @@
 
       jQuery('#tabelaTreino > tbody:last-child').append(row);
       adicionaDescricaoMetodo(nomeMetodo);
+      jQuery("#btnFinalizaTreino").attr("disabled", false);
+
+
     });
 
     // Exibição de exercicios condicionados ao método escolhido
@@ -249,17 +243,17 @@
       var total = jQuery(this).find(":selected").data('qtd-exercicios');
       jQuery('#selectExercicio2').hide();
       jQuery('#selectExercicio3').hide();
-      switch(total){
+      switch (total) {
         case 2: {
-          jQuery('#selectExercicio2').show(); 
+          jQuery('#selectExercicio2').show();
           break;
         }
         case 3: {
-          jQuery('#selectExercicio2').show(); 
+          jQuery('#selectExercicio2').show();
           jQuery('#selectExercicio3').show();
           break;
         }
-        default:{
+        default: {
           jQuery('#selectExercicio2').hide();
           jQuery('#selectExercicio3').hide();
           break;
@@ -270,6 +264,74 @@
     jQuery('#modalConcluirTreino').click(function() {
       jQuery('#comentarioTreino').html(jQuery('#txtComplementoTreino').val());
       jQuery('#modalBotaoFechar').trigger('click');
-  });
+    });
+
+    jQuery('#concluirTreino').click(function() {
+      if (jQuery('#titulo').val() == "") {
+        alert('O campo Título do treino parece estar vazio. Por favor, verifique!');
+        return false;
+      }
+    });
+
+    jQuery('#btnFinalizaTreino').click(function() {
+      // VERSÃO TESTE 1
+      // Pegada JSPDF
+      // var doc = new jsPDF()
+      // // Esse não tem links
+      // doc.autoTable({
+      //   html: '#tabelaTreino'
+      // })
+      // doc.save('table.pdf')
+
+      // VERSÃO TESTE 2 (links ok)
+      // Pegada Html2pdf
+      // var pdfFileName = 'file.pdf';
+      // var element += document.getElementById('tabelaTreino');
+      // const options = {
+      //   margin: 1,
+      //   filename: pdfFileName,
+      //   image: {
+      //     type: 'png',
+      //     quality: 1
+      //   },
+      //   html2canvas: {
+      //     dpi: 192,
+      //     letterRendering: false
+      //   },
+      //   // jsPDF: {
+      //   //   unit: 'in',
+      //   //   format: 'a4',
+      //   //   orientation: 'portrait'
+      //   // }
+      // }
+      // html2pdf(element, options);
+
+
+        // VERSÃO TESTE 3
+      // var doc = new jsPDF('p', 'pt');
+      // var res = doc.autoTableHtmlToJson(document.getElementById("tabelaTreino"));
+      // doc.autoTable(res.columns, res.data, {
+      //   margin: {
+      //     top: 80
+      //   }
+      // });
+      // var header = function(data) {
+      //   doc.setFontSize(18);
+      //   doc.setTextColor(40);
+      //   doc.setFontStyle('normal');
+      //   //doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 20, 50, 50);
+      //   doc.text("Testing Report", data.settings.margin.left, 50);
+      // };
+      // var options = {
+      //   beforePageContent: header,
+      //   startY: doc.autoTableEndPosY() + 20
+      // };
+      // doc.autoTable(res.columns, res.data, options);
+      // doc.save("table.pdf");
+    });
+
+
+
+
   });
 </script>
