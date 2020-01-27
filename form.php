@@ -183,7 +183,65 @@
     });
   }
 
+  function exportacao1() {
+    var doc = new jsPDF()
+    // Esse não tem links
+    doc.autoTable({
+      html: '#tabelaTreino'
+    })
+    doc.save('table.pdf')
+  }
+
+  function exportacao2() {
+    var pdfFileName = 'file.pdf';
+    var element = document.getElementById('tabelaTreino');
+    const options = {
+      margin: 1,
+      filename: pdfFileName,
+      image: {
+        type: 'png',
+        quality: 1
+      },
+      html2canvas: {
+        dpi: 192,
+        letterRendering: false
+      },
+      // jsPDF: {
+      //   unit: 'in',
+      //   format: 'a4',
+      //   orientation: 'portrait'
+      // }
+    }
+    html2pdf(element, options);
+  }
+
+  function exportacao3() {
+    var doc = new jsPDF('p', 'pt');
+    var res = doc.autoTableHtmlToJson(document.getElementById("tabelaTreino"));
+    doc.autoTable(res.columns, res.data, {
+      margin: {
+        top: 80
+      }
+    });
+    
+    // Se for usar header e options
+    // var header = function(data) {
+    //   doc.setFontSize(18);
+    //   doc.setTextColor(40);
+    //   doc.setFontStyle('normal');
+    //   doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 20, 50, 50);
+    //   doc.text("Testing Report", data.settings.margin.left, 50);
+    // };
+    // var options = {
+    //   didDrawPage: header,
+    //   startY: doc.previousAutoTable.finalY + 20
+    // };
+    // doc.autoTable(res.columns, res.data, options);
+    doc.save("table.pdf");
+  }
+
   jQuery(function() {
+    // Implementando drag n drop
     jQuery('tbody').sortable();
 
     // Limpar Treino
@@ -274,60 +332,15 @@
     });
 
     jQuery('#btnFinalizaTreino').click(function() {
-      // VERSÃO TESTE 1
-      // Pegada JSPDF
-      // var doc = new jsPDF()
-      // // Esse não tem links
-      // doc.autoTable({
-      //   html: '#tabelaTreino'
-      // })
-      // doc.save('table.pdf')
+      // VERSÃO TESTE 1 - jsPDF
+      // exportacao1();
 
-      // VERSÃO TESTE 2 (links ok)
-      // Pegada Html2pdf
-      // var pdfFileName = 'file.pdf';
-      // var element += document.getElementById('tabelaTreino');
-      // const options = {
-      //   margin: 1,
-      //   filename: pdfFileName,
-      //   image: {
-      //     type: 'png',
-      //     quality: 1
-      //   },
-      //   html2canvas: {
-      //     dpi: 192,
-      //     letterRendering: false
-      //   },
-      //   // jsPDF: {
-      //   //   unit: 'in',
-      //   //   format: 'a4',
-      //   //   orientation: 'portrait'
-      //   // }
-      // }
-      // html2pdf(element, options);
+      // VERSÃO TESTE 2 (links ok) - Html2pdf
+      // exportacao2();
 
+      // VERSÃO TESTE 3 - jsPDF
+      exportacao3();
 
-        // VERSÃO TESTE 3
-      // var doc = new jsPDF('p', 'pt');
-      // var res = doc.autoTableHtmlToJson(document.getElementById("tabelaTreino"));
-      // doc.autoTable(res.columns, res.data, {
-      //   margin: {
-      //     top: 80
-      //   }
-      // });
-      // var header = function(data) {
-      //   doc.setFontSize(18);
-      //   doc.setTextColor(40);
-      //   doc.setFontStyle('normal');
-      //   //doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 20, 50, 50);
-      //   doc.text("Testing Report", data.settings.margin.left, 50);
-      // };
-      // var options = {
-      //   beforePageContent: header,
-      //   startY: doc.autoTableEndPosY() + 20
-      // };
-      // doc.autoTable(res.columns, res.data, options);
-      // doc.save("table.pdf");
     });
 
 
