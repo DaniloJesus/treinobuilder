@@ -348,3 +348,50 @@
 
   });
 </script>
+
+
+<button id="botao_teste">teste</button>
+<button id="botao_teste_delete">delete</button>
+
+<div id="conteiner_teste"></div>
+<script>
+    jQuery("#botao_teste_delete").click(function() {
+        jQuery('#conteiner_teste table').remove();
+    });
+
+    jQuery("#botao_teste").click(function() {
+        var conteiner_teste = jQuery('#conteiner_teste');
+
+        // build the table
+        var content = '<table>';
+        content += '<thead><tr>';
+        content += '<th>Title</th>';
+        content += '<th colspan="2">Actions</th>';
+        content += '</tr></thead><tbody>';
+        content += '<tr data-id="MyId">';
+        content += '<td>My Title</td>';
+        // give classes to your buttons for later
+        content += '<td><button type="button" class="edit">Edit</button></td>';
+        content += '<td><button type="button" class="delete">Delete</button></td>';
+        content += '</tr>';
+        content += '</tbody></table>';
+
+        // append the table once
+        conteiner_teste.append(content);
+
+        // attach event handlers
+        conteiner_teste.on('click', '.edit', function() {
+            var id = jQuery(this).closest('tr').data('id');
+            console.log('editing ' + id);
+        });
+
+        conteiner_teste.on('click', '.delete', function() {
+            var id = jQuery(this).closest('tr').data('id');
+            console.log('deleting ' + id);
+        });
+    });
+
+    jQuery(function() {
+
+    });
+</script>
