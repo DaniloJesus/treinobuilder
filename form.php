@@ -98,9 +98,10 @@
         </div>
       </div>
       <div class="row justify-content-between">
-        <button id="adicionarExercicio" type="button" class="btn btn-primary btn-lg mt-2 ml-3 col-3">Adicionar Exercício</button>
-        <button id="limparTreino" type="button" class="btn btn-warning btn-lg mt-2 ml-3 col-3">Limpar Treino</button>
-        <button id="concluirTreino" type="button" class="btn btn-success btn-lg mt-2 mr-3 col-3" data-toggle="modal" data-target="#modalComplementoDoTreino">Concluir Treino</button>
+        <button id="adicionarExercicio" type="button" class="btn btn-primary btn-sm mt-2 ml-3 col-2">Adicionar Exercício</button>
+        <button id="limparTreino" type="button" class="btn btn-warning btn-sm mt-2 ml-3 col-2">Limpar Treino</button>
+        <button id="concluirExercicios" type="button" class="btn btn-success btn-sm mt-2 ml-3 col-2" data-toggle="modal" data-target="#modalComplementoDoTreino">Concluir Exercícios deste treino</button>
+        <button id="adicionarTreino" type="button" class="btn btn-success btn-sm mt-2 mr-3 col-2">Adicionar Treino</button>
       </div>
 
       <!-- Modal -->
@@ -128,17 +129,20 @@
       </div>
       <!-- Modal -->
 
-      <div id="tabelaTrienoContainer" class="mt-4">
-        <table id="tabelaTreino" class="table table-sm table-hover table-striped table-light mt-1">
-          <h5 class="text-center" id="tituloTreino"></h5>
+      <div id="tabelaTreinoContainer" class="mt-4">
+        <table id="tabelaTreino" class="active table table-sm table-hover table-striped table-light mt-1">
           <thead class="thead-dark">
+            <tr>
+              <th colspan="5" class="text-center tituloTreino">Título do Treino</th>
+              <th class="removerTreino" onclick="deleteTreino(jQuery(this))"><i class="fa fa-trash fa-sm"></i></th>
+            </tr>
             <tr>
               <th class="colExercicio" width="35%">Exercício</th>
               <!-- <th class="colSeries">Séries</th> -->
               <th class="colMetodo" width="10%">Método</th>
               <th class="colRepeticoes" width="20%">Repetições</th>
               <th class="colCadencia" width="12%">Cadência</th>
-              <th class="colDescanso">Descanso</th>
+              <th class="colDescanso" width="17%">Descanso</th>
               <th class="colBotaoRemover"></th>
             </tr>
           </thead>
@@ -149,7 +153,7 @@
       <div id="rodapeTreino">
         <div id="descricaoMetodo" class="mt-2"></div>
         <div id="botoesFinalizaTreino" class="mt-4">
-          <button type="button" class="btn btn-primary" id="btnFinalizaTreino" disabled>Finalizar Treino</button>
+          <button type="button" class="btn btn-primary" id="btnFinalizaTreino" disabled>Finalizar Treino do Mês</button>
         </div>
       </div>
     </form>
@@ -171,6 +175,11 @@
   // Remover Exercicio da Tabela
   function deleteExercicio(element) {
     element.closest('tr').remove();
+  }
+
+  // Remover tabela de treino da DOM
+  function deleteTreino(element) {
+    element.closest('table').remove();
   }
 
   function adicionaDescricaoMetodo(nomeMetodo) {
@@ -223,7 +232,7 @@
         top: 80
       }
     });
-    
+
     // Se for usar header e options
     // var header = function(data) {
     //   doc.setFontSize(18);
@@ -240,23 +249,67 @@
     doc.save("table.pdf");
   }
 
+  function addTabelaTreino() {
+    var tabelaTreinoContainer = jQuery('#tabelaTreinoContainer');
+    jQuery('table.active').removeClass("active");
+
+    // build the table
+    var content = '<table class="active table table-sm table-hover table-striped table-light mt-1">';
+    content += '<thead class="thead-dark">';
+    content += '<tr><th colspan="5" class="text-center tituloTreino">Título do Treino</th>';
+    content += '<th class="removerTreino" onclick="deleteTreino(jQuery(this))"><i class="fa fa-trash fa-sm"></i></th></tr>';
+    content += '<tr><th class="colExercicio" width="35%">Exercício</th>';
+    content += '<!-- <th class="colSeries">Séries</th> -->';
+    content += '<th class="colMetodo" width="10%">Método</th>';
+    content += '<th class="colRepeticoes" width="20%">Repetições</th>';
+    content += '<th class="colCadencia" width="12%">Cadência</th>';
+    content += '<th class="colDescanso" width="17%">Descanso</th>';
+    content += '<th class="colBotaoRemover"></th>';
+
+
+    content += '</tr></thead><tbody>';
+    content += '</tbody></table>';
+
+    // append the table once
+    tabelaTreinoContainer.append(content);
+
+    // attach event handlers
+    // tabelaTreinoContainer.on('click', '.edit', function() {
+    //   var id = jQuery(this).closest('tr').data('id');
+    //   console.log('editing ' + id);
+    // });
+
+    // tabelaTreinoContainer.on('click', '.delete', function() {
+    //   var id = jQuery(this).closest('tr').data('id');
+    //   console.log('deleting ' + id);
+    // });
+  }
+
+  // Adicionando tabela na DOM
+  jQuery("#adicionarTreino").click(function() {
+    addTabelaTreino();
+    jQuery('tbody').sortable();
+  });
+
   jQuery(function() {
     // Implementando drag n drop
     jQuery('tbody').sortable();
 
     // Limpar Treino
     jQuery('#limparTreino').click(function() {
-      jQuery('#tabelaTreino tbody').empty();
+      jQuery('table').remove();
+      jQuery('#adicionarTreino').trigger("click")
       jQuery('#descricaoMetodo').empty();
       jQuery("#btnFinalizaTreino").attr("disabled", true);
       // jQuery("select#metodo option").prop("disabled", false);
       jQuery("#metodo").val("").change();
+      jQuery("#titulo").val("");
       jQuery("select#metodo option").prop("disabled", true);
     });
 
     // Adicionar exercicio ao Treino
     jQuery('#adicionarExercicio').click(function() {
-      jQuery('#tituloTreino').html(jQuery('#titulo').val());
+      jQuery('table.active th.tituloTreino').html(jQuery('#titulo').val());
       nomeMetodo = jQuery('select#metodo option:selected').val();
       if (nomeMetodo == "") {
         alert('Por favor, escolha um método antes de escolher o exercício');
@@ -288,7 +341,7 @@
       row = row.replace('##cadencia##', jQuery('#cadencia').val());
       row = row.replace('##descanso##', jQuery('#descanso').val());
 
-      jQuery('#tabelaTreino > tbody:last-child').append(row);
+      jQuery('table.active > tbody:last-child').append(row);
       adicionaDescricaoMetodo(nomeMetodo);
       jQuery("#btnFinalizaTreino").attr("disabled", false);
 
@@ -324,7 +377,7 @@
       jQuery('#modalBotaoFechar').trigger('click');
     });
 
-    jQuery('#concluirTreino').click(function() {
+    jQuery('#concluirExercicios').click(function() {
       if (jQuery('#titulo').val() == "") {
         alert('O campo Título do treino parece estar vazio. Por favor, verifique!');
         return false;
@@ -339,59 +392,10 @@
       // exportacao2();
 
       // VERSÃO TESTE 3 - jsPDF
-      exportacao3();
+      // exportacao3();
+      alert('criação dos pdfs');
 
     });
-
-
-
 
   });
-</script>
-
-
-<button id="botao_teste">teste</button>
-<button id="botao_teste_delete">delete</button>
-
-<div id="conteiner_teste"></div>
-<script>
-    jQuery("#botao_teste_delete").click(function() {
-        jQuery('#conteiner_teste table').remove();
-    });
-
-    jQuery("#botao_teste").click(function() {
-        var conteiner_teste = jQuery('#conteiner_teste');
-
-        // build the table
-        var content = '<table>';
-        content += '<thead><tr>';
-        content += '<th>Title</th>';
-        content += '<th colspan="2">Actions</th>';
-        content += '</tr></thead><tbody>';
-        content += '<tr data-id="MyId">';
-        content += '<td>My Title</td>';
-        // give classes to your buttons for later
-        content += '<td><button type="button" class="edit">Edit</button></td>';
-        content += '<td><button type="button" class="delete">Delete</button></td>';
-        content += '</tr>';
-        content += '</tbody></table>';
-
-        // append the table once
-        conteiner_teste.append(content);
-
-        // attach event handlers
-        conteiner_teste.on('click', '.edit', function() {
-            var id = jQuery(this).closest('tr').data('id');
-            console.log('editing ' + id);
-        });
-
-        conteiner_teste.on('click', '.delete', function() {
-            var id = jQuery(this).closest('tr').data('id');
-            console.log('deleting ' + id);
-        });
-    });
-
-    jQuery(function() {
-
-    });
 </script>
